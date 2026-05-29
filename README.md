@@ -11,19 +11,19 @@ Web-based Android remote control via ADB. View and interact with your phone scre
 - **Text injection** — Type on your phone from the browser
 - **Wireless ADB** — Connect devices over WiFi, no USB needed
 - **Mobile-first UI** — Responsive design, works great on phones and tablets
-- **Home Assistant ready** — Embed as iframe panel, toggle on/off via HA automation
+- **Home Assistant ready** — Embed as iframe panel, toggle on/off via Home Assistant automation
 
 ## 🏠 Home Assistant Integration
 
 ScreenPhantom is designed to be a **smart home panel** — not just a standalone tool.
 
-### How it works with HA
+### How it works with Home Assistant
 
-1. **On-demand service** — A toggle switch in HA starts/stops ScreenPhantom to save resources
-2. **Embedded iframe** — The web UI lives inside an HA dashboard tab
-3. **Zero-touch operation** — Tap a button on your HA app → service starts → screen appears
+1. **On-demand service** — A toggle switch in Home Assistant starts/stops ScreenPhantom to save resources
+2. **Embedded iframe** — The web UI lives inside an Home Assistant dashboard tab
+3. **Zero-touch operation** — Tap a button on your Home Assistant app → service starts → screen appears
 
-### Setup in HA
+### Setup in Home Assistant
 
 Add to `configuration.yaml`:
 
