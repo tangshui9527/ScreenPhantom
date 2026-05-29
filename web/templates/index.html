@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>ScreenPhantom</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📱</text></svg>">
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="device-bar">
+          <select id="device-select" size="3"></select>
+          <div class="device-actions">
+            <button id="refresh-devices" type="button">⟳ Refresh</button>
+            <button id="disconnect-target" type="button" class="btn-danger">✕ Disconnect</button>
+          </div>
+        </div>
+        <div class="connect-bar">
+          <form id="connect-form" autocomplete="off">
+            <input id="adb-host" type="text" placeholder="IP address" value="192.168.31.6" data-default="192.168.31.6" required />
+            <input id="adb-port" type="number" min="1" max="65535" value="5555" required />
+            <button type="submit">Connect</button>
+          </form>
+        </div>
+        <div id="status-info" class="status-info">
+          <span id="device-status">No device</span>
+          <span id="connection-status" class="connection-status">Ready</span>
+        </div>
+      </header>
+
+      <div class="layout">
+        <section class="screen-panel">
+          <div class="screen-wrapper">
+            <img id="screen" src="" alt="Select a device" />
+            <canvas id="input-layer"></canvas>
+          </div>
+        </section>
+
+        <aside class="controls-panel">
+          <section class="card">
+            <div class="device-controls">
+              <div class="btn-grid">
+                <button data-key="KEYCODE_POWER" class="btn power">⚡ Power</button>
+                <button data-key="KEYCODE_HOME" class="btn nav">🏠 Home</button>
+                <button data-key="KEYCODE_BACK" class="btn nav">⬅️ Back</button>
+                <button data-key="KEYCODE_APP_SWITCH" class="btn nav">📱 Recents</button>
+                <button data-key="KEYCODE_VOLUME_UP" class="btn vol">🔊+</button>
+                <button data-key="KEYCODE_VOLUME_DOWN" class="btn vol">🔉-</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <form id="text-form" class="text-row">
+              <input id="text-input" type="text" placeholder="Type to send…" />
+              <button type="submit">Send</button>
+            </form>
+          </section>
+        </aside>
+      </div>
+    </main>
+    <div style="display:none">
+      <button id="disconnect-all"></button>
+      <div class="wireless-quick"></div>
+      <pre id="wireless-output"></pre>
+    </div>
+    <script src="/static/app.js" defer></script>
+  </body>
+</html>
