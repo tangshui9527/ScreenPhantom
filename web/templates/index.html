@@ -4,68 +4,79 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>ScreenPhantom</title>
-    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/style.css?v=23" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📱</text></svg>">
   </head>
   <body>
-    <main>
-      <header>
-        <div class="device-bar">
-          <select id="device-select" size="3"></select>
-          <div class="device-actions">
-            <button id="refresh-devices" type="button">⟳ Refresh</button>
-            <button id="disconnect-target" type="button" class="btn-danger">✕ Disconnect</button>
+    <div class="app-container device-controls">
+      <header class="app-header card">
+        <div class="header-row">
+          <!-- Row 1: Selected Device Controls (Left 40%, Right 60%) -->
+          <div class="device-bar">
+            <select id="device-select" class="custom-select" title="Select ADB Device"></select>
+            <div class="device-bar-right">
+              <span id="connection-status" class="connection-status">Ready</span>
+              <button id="refresh-devices" type="button" class="btn btn-icon-label" title="Scan Devices">⟳ Scan</button>
+              <button data-key="KEYCODE_POWER" type="button" class="btn power btn-header-power" title="Power On/Off">Power</button>
+            </div>
           </div>
-        </div>
-        <div class="connect-bar">
-          <form id="connect-form" autocomplete="off">
-            <input id="adb-host" type="text" placeholder="IP address" value="192.168.31.6" data-default="192.168.31.6" required />
-            <input id="adb-port" type="number" min="1" max="65535" value="5555" required />
-            <button type="submit">Connect</button>
+
+          <!-- Row 2: Network Connection Controls (Left 40%, Right 60%) -->
+          <form id="connect-form" autocomplete="off" class="connect-bar">
+            <div class="input-group">
+              <input id="adb-host" type="text" placeholder="IP Address" value="192.168.31.17" data-default="192.168.31.17" required />
+              <span class="port-colon">:</span>
+              <input id="adb-port" type="number" min="1" max="65535" value="5555" required />
+            </div>
+            <div class="connect-bar-right">
+              <button type="submit" class="btn btn-primary">Connect</button>
+              <button id="disconnect-target" type="button" class="btn btn-danger" title="Disconnect Device">✕ Disconnect</button>
+            </div>
           </form>
         </div>
-        <div id="status-info" class="status-info">
-          <span id="device-status">No device</span>
-          <span id="connection-status" class="connection-status">Ready</span>
-        </div>
+
+        <span id="device-status" style="display:none;">No device</span>
       </header>
 
       <div class="layout">
         <section class="screen-panel">
           <div class="screen-wrapper">
-            <img id="screen" src="" alt="Select a device" />
+            <img id="screen" src="" alt="Select a device to view screen" />
             <canvas id="input-layer"></canvas>
           </div>
         </section>
 
         <aside class="controls-panel">
-          <section class="card">
-            <div class="device-controls">
+          <section class="card control-card">
+            <div class="card-title">Device Controls</div>
+            <div>
               <div class="btn-grid">
                 <button data-key="KEYCODE_POWER" class="btn power">⚡ Power</button>
                 <button data-key="KEYCODE_HOME" class="btn nav">🏠 Home</button>
                 <button data-key="KEYCODE_BACK" class="btn nav">⬅️ Back</button>
                 <button data-key="KEYCODE_APP_SWITCH" class="btn nav">📱 Recents</button>
-                <button data-key="KEYCODE_VOLUME_UP" class="btn vol">🔊+</button>
-                <button data-key="KEYCODE_VOLUME_DOWN" class="btn vol">🔉-</button>
+                <button data-key="KEYCODE_VOLUME_UP" class="btn vol">🔊 Vol +</button>
+                <button data-key="KEYCODE_VOLUME_DOWN" class="btn vol">🔉 Vol -</button>
               </div>
             </div>
           </section>
 
-          <section class="card">
+          <section class="card input-card">
+            <div class="card-title">Text Input</div>
             <form id="text-form" class="text-row">
-              <input id="text-input" type="text" placeholder="Type to send…" />
-              <button type="submit">Send</button>
+              <input id="text-input" type="text" placeholder="Type text to send…" autocomplete="off" />
+              <button type="submit" class="btn btn-primary">Send</button>
             </form>
           </section>
         </aside>
       </div>
-    </main>
+    </div>
+
     <div style="display:none">
       <button id="disconnect-all"></button>
       <div class="wireless-quick"></div>
       <pre id="wireless-output"></pre>
     </div>
-    <script src="/static/app.js" defer></script>
+    <script src="/static/app.js?v=99999" defer></script>
   </body>
 </html>

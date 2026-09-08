@@ -62,7 +62,7 @@
       data.devices.forEach((d) => {
         const opt = document.createElement("option");
         opt.value = d.serial;
-        opt.textContent = `${d.serial} [${d.status}]`;
+        opt.textContent = d.serial;
         if (d.serial === prev) opt.selected = true;
         deviceSelect.appendChild(opt);
       });
@@ -137,20 +137,41 @@
     const c = toDevice(e.clientX, e.clientY);
     if (!c) return;
     const r = canvas.getBoundingClientRect();
-    state.pointer = { start: c, startLocal: { x: e.clientX - r.left, y: e.clientY - r.top }, time: e.timeStamp };
+    state.pointer = { start: c, startLocal: { x: e.clientX - r.left, y: e.clientY - r.top }, time: e.timeStamp, epoch: Date.now() };
     canvas.setPointerCapture(e.pointerId);
   }
 
   function onPointerMove(e) {
     if (!state.pointer) return;
     const r = canvas.getBoundingClientRect();
+    const cx = e.clientX - r.left, cy = e.clientY - r.top;
+    const dx = cx - state.pointer.startLocal.x, dy = cy - state.pointer.startLocal.y;
+    const dist = Math.hypot(dx, dy);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "rgba(99,102,241,0.7)";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(state.pointer.startLocal.x, state.pointer.startLocal.y);
-    ctx.lineTo(e.clientX - r.left, e.clientY - r.top);
-    ctx.stroke();
+    if (dist < 25) {
+      // Long-press indicator: growing circle
+      const elapsed = Date.now() - state.pointer.epoch;
+      const progress = Math.min(elapsed / 500, 1);
+      const radius = 20 + progress * 20;
+      ctx.strokeStyle = "rgba(234,179,8,0.9)";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(state.pointer.startLocal.x, state.pointer.startLocal.y, radius, 0, Math.PI * 2);
+      ctx.stroke();
+      if (progress >= 1) {
+        ctx.fillStyle = "rgba(234,179,8,0.3)";
+        ctx.beginPath();
+        ctx.arc(state.pointer.startLocal.x, state.pointer.startLocal.y, radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else {
+      ctx.strokeStyle = "rgba(99,102,241,0.7)";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(state.pointer.startLocal.x, state.pointer.startLocal.y);
+      ctx.lineTo(cx, cy);
+      ctx.stroke();
+    }
   }
 
   async function onPointerUp(e) {
@@ -159,13 +180,17 @@
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const start = state.pointer.start;
     const end = toDevice(e.clientX, e.clientY) || start;
-    const elapsed = e.timeStamp - state.pointer.time;
+    const elapsed = Date.now() - state.pointer.epoch;
     state.pointer = null;
     const serial = getSelectedSerial();
     const dist = Math.hypot(end.x - start.x, end.y - start.y);
     try {
       if (dist < 25) {
-        await apiPost("/api/tap", { x: start.x, y: start.y, serial });
+        if (elapsed > 500) {
+          await apiPost("/api/swipe", { x1: start.x, y1: start.y, x2: start.x, y2: start.y, duration_ms: Math.round(elapsed), serial });
+        } else {
+          await apiPost("/api/tap", { x: start.x, y: start.y, serial });
+        }
       } else {
         const dur = Math.max(150, Math.min(1000, Math.round(elapsed)));
         await apiPost("/api/swipe", { x1: start.x, y1: start.y, x2: end.x, y2: end.y, duration_ms: dur, serial });

@@ -1,119 +1,442 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* ScreenPhantom — Mushroom + Graphite Dark Theme (Strict 4:6 Ratio Layout) */
+
+:root {
+  /* Graphite Machine Shell Tokens */
+  --bg: #111112;                            /* Page background */
+  --card: #23242b;                          /* Card background rgb(35,36,43) */
+  --card-surface: #2b2c35;                  /* Input/select surface */
+  --card-border: rgba(255, 255, 255, 0.06);   /* Divider border */
+  
+  --text-1: #e4e4e7;                        /* Main text */
+  --text-2: #8a8c99;                        /* Secondary text */
+  --accent: #e08a00;                        /* Amber accent */
+
+  --radius-card: 12px;                      /* Mushroom card radius */
+  --radius-chip: 19px;                      /* Mushroom chip full round (36px height / 19px radius) */
+
+  /* Official Mushroom RGB Palette (colors.ts) */
+  --rgb-red: 244, 67, 54;
+  --rgb-blue: 33, 150, 243;
+  --rgb-teal: 0, 150, 136;
+  --rgb-green: 76, 175, 80;
+  --rgb-amber: 255, 193, 7;
+  --rgb-orange: 255, 152, 0;
+  --rgb-indigo: 63, 81, 181;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #0f1117;
-  color: #e4e8f1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--text-1);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  padding: 8px 0;
+  overflow-x: hidden;
 }
 
-main { max-width: 1400px; margin: 0 auto; padding: 10px; }
-
-/* Header */
-header { margin-bottom: 10px; }
-
-.device-bar {
-  display: flex; gap: 8px; align-items: stretch; margin-bottom: 8px;
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 6px;
 }
 
-.device-bar select {
-  flex: 1; min-height: 80px; font-size: 1rem; line-height: 1.8;
-  background: rgba(255,255,255,0.06); color: #e4e8f1;
-  border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 6px;
+/* Neutral Gray Card Body */
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  padding: 8px 10px;
+  box-shadow: none;
 }
 
-.device-actions {
-  display: flex; flex-direction: column; gap: 6px; justify-content: center;
+.card-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-2);
+  margin-bottom: 8px;
 }
 
-.connect-bar form {
-  display: flex; gap: 6px;
+/* ---------- Header (Strict 4:6 Ratio Layout) ---------- */
+.app-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
 }
 
-.connect-bar input[type="text"] { flex: 2; }
-.connect-bar input[type="number"] { width: 70px; }
-
-.status-info {
-  display: flex; justify-content: space-between; align-items: center;
-  font-size: 0.8rem; margin-top: 6px; padding: 6px 10px;
-  background: rgba(255,255,255,0.03); border-radius: 8px;
+.header-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
 }
 
-#device-status { color: #94a3b8; }
+.device-bar, .connect-bar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
+}
 
+/* Left side (Dropdown & IP Input) takes EXACTLY 40% width */
+.device-bar select.custom-select,
+.connect-bar .input-group {
+  flex: 0 0 calc(40% - 3px);
+  width: calc(40% - 3px);
+  min-width: 0;
+  height: 36px;
+  box-sizing: border-box;
+}
+
+.device-bar select.custom-select {
+  background: var(--card-surface);
+  color: var(--text-1);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 0 6px;
+  font-size: 0.78rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.device-bar select.custom-select:focus {
+  border-color: rgba(var(--rgb-blue), 0.5);
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  background: var(--card-surface);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 0 4px;
+}
+
+.input-group:focus-within {
+  border-color: rgba(var(--rgb-blue), 0.5);
+}
+
+.input-group input {
+  background: transparent;
+  border: none;
+  color: var(--text-1);
+  font-size: 0.78rem;
+  padding: 4px 2px;
+  outline: none;
+}
+
+.input-group input[type="text"] {
+  flex: 1;
+  min-width: 0;
+}
+
+.input-group input[type="number"] {
+  width: 36px;
+  flex: none;
+  text-align: center;
+}
+
+.port-colon {
+  color: var(--text-2);
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+/* Right side (Buttons container) takes EXACTLY 60% width */
+.device-bar-right,
+.connect-bar-right {
+  flex: 0 0 calc(60% - 3px);
+  width: calc(60% - 3px);
+  min-width: 0;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+/* Row 1 Right Buttons */
 .connection-status {
-  padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 600;
-  background: rgba(34,197,94,0.15); color: #22c55e;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0 6px;
+  height: 36px;
+  border-radius: var(--radius-chip);
+  color: var(--text-1);
+  background: rgba(var(--rgb-green), 0.2);
+  border: none;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
-.connection-status.error { background: rgba(239,68,68,0.15); color: #ef4444; }
-.connection-status.warning { background: rgba(251,191,36,0.15); color: #fbbf24; }
 
-/* Layout */
-.layout { display: grid; grid-template-columns: 1fr 280px; gap: 10px; align-items: start; }
+.connection-status::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgb(var(--rgb-green));
+}
 
-/* Screen */
-.screen-panel { position: sticky; top: 10px; }
+.connection-status.error {
+  background: rgba(var(--rgb-red), 0.2);
+}
+.connection-status.error::before {
+  background: rgb(var(--rgb-red));
+}
+
+.connection-status.warning {
+  background: rgba(var(--rgb-amber), 0.2);
+}
+.connection-status.warning::before {
+  background: rgb(var(--rgb-amber));
+}
+
+#refresh-devices {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 4px;
+  font-size: 0.76rem;
+  white-space: nowrap;
+}
+
+.btn-header-power {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 4px;
+  font-size: 0.76rem;
+  white-space: nowrap;
+}
+
+/* Row 2 Right Buttons */
+.connect-bar-right .btn-primary {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 4px;
+  font-size: 0.76rem;
+  white-space: nowrap;
+}
+
+.connect-bar-right #disconnect-target {
+  flex: 1.2;
+  min-width: 0;
+  height: 36px;
+  padding: 0 4px;
+  font-size: 0.76rem;
+  white-space: nowrap;
+}
+
+/* ---------- Mushroom Chip Buttons ---------- */
+button, .btn {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  height: 36px;
+  border: none;
+  border-radius: var(--radius-chip);
+  padding: 0 8px;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  
+  color: var(--text-1) !important;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+button:active, .btn:active {
+  transform: scale(0.95);
+  opacity: 0.8;
+}
+
+/* Primary Connect / Nav: Blue 20% background */
+.btn-primary, .btn.nav {
+  background: rgba(var(--rgb-blue), 0.2);
+}
+.btn-primary:hover, .btn.nav:hover {
+  background: rgba(var(--rgb-blue), 0.3);
+}
+
+/* Danger / Power / Disconnect: Red 20% background */
+.btn-danger, .btn.power {
+  background: rgba(var(--rgb-red), 0.2) !important;
+}
+.btn-danger:hover, .btn.power:hover {
+  background: rgba(var(--rgb-red), 0.3) !important;
+}
+
+/* Neutral Chips (Scan, etc.) */
+.btn-icon-label, .btn-icon {
+  background: rgba(255, 255, 255, 0.08);
+}
+.btn-icon-label:hover, .btn-icon:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Volume Buttons: Teal 20% background */
+.btn.vol {
+  background: rgba(var(--rgb-teal), 0.2);
+}
+.btn.vol:hover {
+  background: rgba(var(--rgb-teal), 0.3);
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* ---------- Main Layout ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 8px;
+  align-items: start;
+}
+
+/* ---------- Screen Panel ---------- */
+.screen-panel {
+  position: sticky;
+  top: 8px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
 
 .screen-wrapper {
-  position: relative; border-radius: 10px; overflow: hidden;
-  background: #000; border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  position: relative;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: #000000;
+  border: 1px solid var(--card-border);
+  box-shadow: none;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#screen { display: block; width: 100%; height: auto; min-height: 200px; }
+#screen {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: calc(100vh - 60px);
+  min-height: 560px;
+  object-fit: contain;
+  background: #000000;
+}
 
 #input-layer {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  touch-action: none; cursor: crosshair;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: crosshair;
 }
 
-/* Controls */
-.controls-panel { display: flex; flex-direction: column; gap: 8px; }
-
-.card {
-  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 10px; padding: 12px;
+/* ---------- Controls Panel ---------- */
+.controls-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
-
-button, select, input {
-  font-size: 0.85rem; border: none; border-radius: 8px; padding: 10px 12px;
-  outline: none; transition: all 0.15s ease;
+.btn-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
 }
 
-select, input {
-  background: rgba(255,255,255,0.06); color: #e4e8f1;
-  border: 1px solid rgba(255,255,255,0.1);
+.text-row {
+  display: flex;
+  gap: 6px;
 }
-select:focus, input:focus { border-color: #6366f1; }
 
-button {
-  cursor: pointer; font-weight: 500; color: #fff;
-  background: linear-gradient(135deg, #4f46e5, #6366f1);
+.text-row input {
+  flex: 1;
+  background: var(--card-surface);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-chip);
+  padding: 0 12px;
+  color: var(--text-1);
+  font-size: 0.8rem;
+  outline: none;
 }
-button:hover { filter: brightness(1.1); transform: translateY(-1px); }
-button:active { transform: translateY(0); filter: brightness(0.95); }
 
-.btn.power { background: linear-gradient(135deg, #dc2626, #ef4444); grid-column: span 2; }
-.btn.nav { background: linear-gradient(135deg, #374151, #4b5563); }
-.btn.vol { background: linear-gradient(135deg, #1d4ed8, #3b82f6); }
-.btn.screenshot { background: linear-gradient(135deg, #059669, #10b981); }
-.btn-danger { background: linear-gradient(135deg, #991b1b, #dc2626) !important; }
-.full-width { width: 100%; }
+.text-row input:focus {
+  border-color: rgba(var(--rgb-blue), 0.5);
+}
 
-.text-row { display: flex; gap: 6px; }
-.text-row input { flex: 1; }
-
-/* Mobile */
+/* ---------- Mobile Responsive (Xiaomi 11 & Mobile Web) ---------- */
 @media (max-width: 800px) {
-  .layout { grid-template-columns: 1fr; gap: 8px; }
-  .screen-panel { position: static; }
-  .device-bar { flex-direction: column; }
-  .device-bar select { min-height: 60px; }
-  .device-actions { flex-direction: row; }
-  .connect-bar form { flex-wrap: wrap; }
-  .btn-grid { grid-template-columns: repeat(3, 1fr); }
-  .btn.power { grid-column: span 3; }
+  body {
+    padding: 4px 0px;
+  }
+
+  .app-container {
+    gap: 6px;
+    padding: 0 4px;
+  }
+
+  .card {
+    padding: 6px 8px;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  /* Leave finger space (24px padding on each side) for web page scrolling */
+  .screen-panel {
+    position: static;
+    padding: 0 24px;
+    box-sizing: border-box;
+  }
+
+  /* Natural height display */
+  #screen {
+    max-height: none;
+    height: auto;
+    min-height: 540px;
+  }
+
+  .btn-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .btn.power {
+    grid-column: span 1;
+  }
+
+  button, .btn {
+    height: 36px;
+    border-radius: 19px;
+    padding: 0 4px;
+    font-size: 0.76rem;
+  }
 }
