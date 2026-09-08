@@ -49,9 +49,9 @@ body {
   padding: 0 6px;
 }
 
-/* Neutral Gray Card Body */
+/* Transparent Bordered Card Container */
 .card {
-  background: var(--card);
+  background: transparent;
   border: 1px solid var(--card-border);
   border-radius: var(--radius-card);
   padding: 8px 10px;
